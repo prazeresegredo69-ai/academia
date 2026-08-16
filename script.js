@@ -1,0 +1,82 @@
+// script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. Countdown Timer ---
+    // Timer de exemplo: 2 horas, 45 minutos e 30 segundos a partir de agora.
+    // Para urgência real, considere usar localStorage ou um horário fixo de término do dia.
+
+    let timeInSeconds = (2 * 3600) + (45 * 60) + 30; // 2h 45m 30s
+
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    function updateTimer() {
+        if (timeInSeconds <= 0) {
+            timeInSeconds = 0;
+            // Opcional: tratar expiração do timer (ex: esconder oferta)
+        }
+
+        const h = Math.floor(timeInSeconds / 3600);
+        const m = Math.floor((timeInSeconds % 3600) / 60);
+        const s = Math.floor(timeInSeconds % 60);
+
+        if(hoursEl) hoursEl.textContent = h.toString().padStart(2, '0');
+        if(minutesEl) minutesEl.textContent = m.toString().padStart(2, '0');
+        if(secondsEl) secondsEl.textContent = s.toString().padStart(2, '0');
+
+        if (timeInSeconds > 0) {
+            timeInSeconds--;
+        }
+    }
+
+    if (hoursEl && minutesEl && secondsEl) {
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    }
+
+
+    // --- 2. FAQ Accordion ---
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const isActive = header.classList.contains('active');
+
+            // Fecha todos os acordeões abertos (remova se quiser múltiplos abertos)
+            document.querySelectorAll('.accordion-header').forEach(btn => {
+                btn.classList.remove('active');
+                btn.nextElementSibling.style.maxHeight = null;
+            });
+
+            // Se não estava ativo, abre
+            if (!isActive) {
+                header.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    });
+
+    // --- 3. Smooth Scroll para Links Âncora ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute('href');
+            if(targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
+
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+});
