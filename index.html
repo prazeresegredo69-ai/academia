@@ -875,18 +875,6 @@
                 document.addEventListener('dragstart', function(e) {
                     e.preventDefault();
                 });
-
-                document.addEventListener('click', function(e) {
-                    let target = e.target;
-                    while (target && target !== document.body) {
-                        if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.classList?.contains('btn-primary')) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            return;
-                        }
-                        target = target.parentNode;
-                    }
-                }, true);
             }
         })();
     </script>
