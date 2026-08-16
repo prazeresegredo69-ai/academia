@@ -201,6 +201,7 @@ a {
 }
 
 .hero .subtitle {
+    font-size: 1.5rem;
     color: rgba(255,255,255,0.8);
 }
 
@@ -826,7 +827,8 @@ footer .safety-note {
    Media Queries
    ========================================= */
 @media (max-width: 768px) {
-    .hero .main-title { font-size: 2.2rem; }
+    .hero .main-title { font-size: 2rem; }
+    .hero .subtitle { font-size: 1.15rem; }
     .section-title { font-size: 1.7rem; }
 
     .pricing-grid { gap: 30px; }
@@ -844,4 +846,10 @@ footer .safety-note {
     .countdown { gap: 10px; }
     .time-box { min-width: 80px; padding: 10px; }
     .time-box span { font-size: 2rem; }
+}
+
+@media (max-width: 480px) {
+    .hero .main-title { font-size: 1.6rem; }
+    .hero .subtitle { font-size: 1rem; }
+    .tag { font-size: 0.75rem !important; padding: 5px 14px !important; }
 }
