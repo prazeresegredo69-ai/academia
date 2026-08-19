@@ -79,12 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 4. Repassa UTM/click IDs da landing page para o checkout (GGCheckout) ---
+    // --- 4. Repassa UTM/click IDs da landing page para o checkout (GGCheckout) e identifica o plano ---
+    const checkoutPlans = {
+        'https://ggcheckout.app/checkout/v5/3SqygYB4Ihqs7MpPk0NL': { name: 'Plano Completo', value: 27.90 },
+        'https://ggcheckout.app/checkout/v5/5r5VaPeez8BlunAXvyna': { name: 'Plano Básico', value: 17.90 }
+    };
     const checkoutLinks = document.querySelectorAll('a[href*="ggcheckout.app"]');
     const currentParams = new URLSearchParams(window.location.search);
 
-    if (checkoutLinks.length && [...currentParams.keys()].length) {
-        checkoutLinks.forEach(link => {
+    checkoutLinks.forEach(link => {
+        const plan = checkoutPlans[link.href];
+
+        if ([...currentParams.keys()].length) {
             const url = new URL(link.href);
             currentParams.forEach((value, key) => {
                 if (!url.searchParams.has(key)) {
@@ -92,13 +98,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             link.href = url.toString();
-        });
-    }
+        }
 
-    // Dispara InitiateCheckout no clique dos botões de checkout
-    checkoutLinks.forEach(link => {
+        // Dispara InitiateCheckout no clique, identificando qual dos dois planos foi escolhido
         link.addEventListener('click', () => {
-            if (typeof fbq === 'function') {
+            if (typeof fbq !== 'function') return;
+
+            if (plan) {
+                fbq('track', 'InitiateCheckout', {
+                    content_name: plan.name,
+                    value: plan.value,
+                    currency: 'BRL'
+                });
+            } else {
                 fbq('track', 'InitiateCheckout');
             }
         });
