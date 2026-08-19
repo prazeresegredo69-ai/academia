@@ -79,4 +79,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- 4. Repassa UTM/click IDs da landing page para o checkout (GGCheckout) ---
+    const checkoutLinks = document.querySelectorAll('a[href*="ggcheckout.app"]');
+    const currentParams = new URLSearchParams(window.location.search);
+
+    if (checkoutLinks.length && [...currentParams.keys()].length) {
+        checkoutLinks.forEach(link => {
+            const url = new URL(link.href);
+            currentParams.forEach((value, key) => {
+                if (!url.searchParams.has(key)) {
+                    url.searchParams.set(key, value);
+                }
+            });
+            link.href = url.toString();
+        });
+    }
+
+    // Dispara InitiateCheckout no clique dos botões de checkout
+    checkoutLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (typeof fbq === 'function') {
+                fbq('track', 'InitiateCheckout');
+            }
+        });
+    });
+
 });
