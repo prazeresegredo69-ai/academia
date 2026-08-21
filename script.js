@@ -81,14 +81,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. Repassa UTM/click IDs da landing page para o checkout (GGCheckout) e identifica o plano ---
     const checkoutPlans = {
-        'https://ggcheckout.app/checkout/v5/3SqygYB4Ihqs7MpPk0NL': { name: 'Plano Completo', value: 27.90 },
-        'https://ggcheckout.app/checkout/v5/5r5VaPeez8BlunAXvyna': { name: 'Plano Básico', value: 17.90 }
+        '/checkout/v5/3SqygYB4Ihqs7MpPk0NL': { name: 'Plano Completo', value: 27.90 },
+        '/checkout/v5/5r5VaPeez8BlunAXvyna': { name: 'Plano Básico', value: 17.90 }
     };
     const checkoutLinks = document.querySelectorAll('a[href*="ggcheckout.app"]');
     const currentParams = new URLSearchParams(window.location.search);
 
     checkoutLinks.forEach(link => {
-        const plan = checkoutPlans[link.href];
+        // Casa pelo pathname (nao pela URL completa), pois o script da UTMify
+        // pode reescrever o href com querystring antes deste codigo rodar.
+        const plan = checkoutPlans[new URL(link.href).pathname];
 
         if ([...currentParams.keys()].length) {
             const url = new URL(link.href);
